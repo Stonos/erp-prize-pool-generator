@@ -3,13 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <title>ERP Prize pool generator</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
 <label for="txtInput">Enter tsv from Google Sheets:</label>
 <br>
-<textarea id="txtInput" cols="80" rows="20"></textarea>
+<textarea id="txtInput" cols="80" rows="20">Wiz Liz	235	mystics	19976
+Wiz Liz	200	ectos	19721
+Paul	2000	gold	-1
+Monk Of Justice	2	The Bard	29168
+Gregor	500	gold	-1
+Gregor	969	ectos	19721
+Gregor	266	mystics	19976
+Gregor	750	matrix	73248
+FRICKENREESH	1000	gold	-1
+FRICKENREESH	500	mystics	19976
+Sefik	500	ectos	19721
+Sefik	1	Ley Line Staff Skin	63974
+Sefik	2	ghostly	77310
+Sefik	69	gold	-1
+Sefik	250	mystics	19976
+Reavarz	7750	ectos	19721
+Reavarz	250	mystics	19976
+Mumei	250	mystics	19976
+Mumei	1	Spark	29167
+Apharma	200	mystics	19976
+Apharma	1	Dusk	29185
+Robin	500	mystics	19976
+Ezio	500	matrix	73248
+Ezio	250	ectos	19721
+Ezio	10	damask	46741
+Zigaro	1750	ectos	19721
+Zigaro	750	blood	24295
+Moonshine	1	Dusk	29185
+Moonshine	250	mystics	19976
+Moonshine	1	trading post	35986
+Pikl	750	ectos	19721
+Pikl	250	leech sigil	24599
+Pikl	69	gold ore	19698
+Cryno	300	gold	-1
+Cryno	3	ghostly	77310
+Plenyx	1	Glyph Of Volatility	88045
+Certin	500	mystics	19976
+Sanistic	100	gold	-1
+Sanistic	100	mystics	19976
+Sanistic	5	tattered bat wings	73430
+Ayroxs	250	mystics	19976
+Ayroxs	80	gold	-1
+Syeria Azlan	50	mystics	19976
+Andlat Helsonr	6	ingots	46738
+Andlat Helsonr	2	rare dyes	48924
+Andlat Helsonr	150	mystics	19976
+Micekrispies	128	butternut	41569
+Rafael Itch	250	mystics	19976
+Rafael Itch	1	ghostly	77310
+Rafael Itch	250	ectos	19721
+Godzillakid	1	ghostly	77310
+Godzillakid	8	damask	46741
+Godzillakid	5	spiritwood	46736
+Godzillakid	75	matrix	73248
+Godzillakid	8	leathers	46739
+Godzillakid	60	gold	-1
+MATA	250	mystics	19976
+MATA	750	ectos	19721
+MATA	16	spiritwood	46736
+MATA	10	damask	46741
+MATA	12	ingots	46738
+MATA	10	leathers	46739
+MATA	250	writs	73191
+MATA	500	butternut	41569
+MATA	13	cleric insignia	19911
+MATA	12	sentinel inscription	41560
+Lyn	250	mystics	19976
+JESTER	380	butternut	41569
+JESTER	7	insignia	19911
+JESTER	6	inscriptions	41560
+JESTER	240	writs	73191
+Hibiscus	60	charged cores	24304
+Hibiscus	50	mystics	19976
+Hibiscus	40	ectos	19721
+Hibiscus	30	matrix	73248
+Hibiscus	20	gold	-1
+Luna	40	butternut	41569
+Luna	20	writs	73191
+Swainz	1	Blue celestial infusion	81919
+MagicalMike	386	butternut	41569
+MagicalMike	135	writs	73191
+Lunar	500	gold	-1
+DanDaze	25	gold	-1
+Synapse	2500	mystics	19976
+Ad_Trip	150	amalgamated	68063
+Ad_Trip	500	ectos	19721
+Ad_Trip	200	mystics	19976
+Ad_Trip	250	cured leather	19737</textarea>
 <br>
 <button id="btnGo">Go</button>
+
+<div id="output"></div>
 
 <script type="text/javascript" src="js/lib/kotlin.js"></script>
 <script type="text/javascript" src="js/lib/kotlinx-serialization-kotlinx-serialization-runtime.js"></script>

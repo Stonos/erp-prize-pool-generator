@@ -1,0 +1,78 @@
+#output {
+    text-align: center;
+    font-family: 'Lemon/Milk', serif;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 2em;
+    color: white;
+    -webkit-text-stroke: 4px black;
+    background-color: green;
+}
+
+.donation {
+    margin-top: 16px;
+}
+
+.itemContainer {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 16px;
+    margin-right: 16px;
+}
+
+.multiplicationSign {
+    font-family: sans-serif;
+    font-size: 1.5em;
+    margin-left: 8px;
+    margin-right: 8px;
+}
+
+.donator {
+    font-weight: bold;
+    font-size: 1.5em;
+    margin-top: 32px;
+}
+
+@font-face {
+    font-family: 'Lemon/Milk';
+    src: url('fonts/LemonMilkitalic.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Lemon/Milk';
+    src: url('fonts/LemonMilklightitalic.woff') format('woff');
+    font-weight: 300;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Lemon/Milk';
+    src: url('fonts/LemonMilkbold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Lemon/Milk';
+    src: url('fonts/LemonMilkbolditalic.woff') format('woff');
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Lemon/Milk';
+    src: url('fonts/LemonMilklight.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Lemon/Milk';
+    src: url('fonts/LemonMilk.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
