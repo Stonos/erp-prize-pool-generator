@@ -14,4 +14,13 @@ data class ItemPrice(
 
     @SerialName("sells")
     val sells: ItemQuantityPrice
-)
+) {
+    val sellsOrBuys: ItemQuantityPrice
+        get() {
+            return if (sells.quantity != 0) {
+                sells
+            } else {
+                buys
+            }
+        }
+}

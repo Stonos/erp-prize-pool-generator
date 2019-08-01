@@ -29,7 +29,7 @@ private fun parseInput(input: String) {
     val lines = input.split("\n")
     val parsedLines = lines.map { line ->
         val columns = line.split("\t")
-        ParsedLine(columns[0], columns[1].toInt(), columns[3].toInt())
+        ParsedLine(columns[0].toLowerCase(), columns[1].toInt(), columns[3].toInt())
     }
 
     val itemsIds = parsedLines.map { it.itemId }.toSet()
@@ -42,15 +42,18 @@ private fun parseInput(input: String) {
 
         val itemsWithPrice = items.mapNotNull { item ->
             val price = prices.find { it.id == item.id } ?: return@mapNotNull null
-            item.copy(price = price.sells.unitPrice)
+            item.copy(price = price.sellsOrBuys.unitPrice)
         }.associateBy { it.id }.toMutableMap()
-        itemsWithPrice[-1] = ItemDetails(-1, "gold", "https://wiki.guildwars2.com/images/d/d1/Gold_coin.png", 10000)
+        itemsWithPrice[-1] = ItemDetails(-1, "gold", "https://i.imgur.com/BYDgrSM.png", 10000)
         println(itemsWithPrice)
 
         val donatorNames = parsedLines.map { it.name }.toSet()
         val donators = donatorNames.map { name ->
-            val donations = parsedLines.filter { it.name == name }.map { parsedLine ->
-                Donation(itemsWithPrice.getValue(parsedLine.itemId), parsedLine.quantity)
+            val filteredName = parsedLines.filter { it.name == name }
+            val itemQuantities =
+                filteredName.groupingBy { it.itemId }.fold(0) { accumulator, element -> accumulator + element.quantity }
+            val donations = itemQuantities.map { itemQuantity ->
+                Donation(itemsWithPrice.getValue(itemQuantity.key), itemQuantity.value)
             }.sortedDescending()
             Donator(name, donations)
         }.sortedDescending()
