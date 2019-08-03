@@ -34,6 +34,16 @@
     margin-top: 32px;
 }
 
+.totalValue {
+    font-size: 0.5em;
+    -webkit-text-stroke: 2px black;
+}
+
+.totalValueGoldIcon {
+    margin-left: 24px;
+    margin-right: 8px;
+}
+
 @font-face {
     font-family: 'Lemon/Milk';
     src: url('fonts/LemonMilkitalic.woff') format('woff');

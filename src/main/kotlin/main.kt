@@ -1,11 +1,8 @@
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.html.DIV
-import kotlinx.html.div
+import kotlinx.html.*
 import kotlinx.html.dom.append
-import kotlinx.html.img
 import kotlinx.html.js.div
-import kotlinx.html.span
 import kotlinx.serialization.UnstableDefault
 import models.Donation
 import models.Donator
@@ -77,6 +74,19 @@ private fun DIV.renderDonator(donator: Donator) = div("donator") {
     span("donator") { +donator.name }
     val itemRows = donator.donations.chunked(4)
     itemRows.forEach { renderItems(it) }
+
+    val totalValue = donator.donations.fold(0) { accumulator, donation -> accumulator + donation.totalPrice }
+    div("itemContainer totalValue") {
+        +"Total value: "
+        img {
+            alt = "Gold"
+            src = "https://i.imgur.com/BYDgrSM.png"
+            width = "32px"
+            height = "32px"
+            classes = setOf("totalValueGoldIcon")
+        }
+        +(totalValue / 10000).toString()
+    }
 }
 
 private fun DIV.renderItems(items: List<Donation>) = div("items") {
