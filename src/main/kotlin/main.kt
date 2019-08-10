@@ -42,6 +42,12 @@ private fun parseInput(input: String) {
             item.copy(price = price.sellsOrBuys.unitPrice)
         }.associateBy { it.id }.toMutableMap()
         itemsWithPrice[-1] = ItemDetails(-1, "gold", "https://i.imgur.com/BYDgrSM.png", 10000)
+        itemsWithPrice[-2] = ItemDetails(
+            -2,
+            "Black Lion Chest Key",
+            "https://render.guildwars2.com/file/207BDD31BC494A07A0A1691705079100066D3F2F/414998.png",
+            28 * 10000
+        )
         println(itemsWithPrice)
 
         val donatorNames = parsedLines.map { it.name }.toSet()
