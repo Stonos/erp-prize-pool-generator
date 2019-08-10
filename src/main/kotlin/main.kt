@@ -58,6 +58,66 @@ private fun parseInput(input: String) {
 //        println(donators)
         donators.forEach { println("${it.name}: ${it.totalDonation}") }
         printDonations(donators)
+
+        val totalItemQuantities =
+            parsedLines.groupingBy { it.itemId }.fold(0) { accumulator, element -> accumulator + element.quantity }
+        val totalDonations = totalItemQuantities.map { itemQuantity ->
+            Donation(itemsWithPrice.getValue(itemQuantity.key), itemQuantity.value)
+        }.sortedDescending()
+        println(totalDonations)
+        printTotalDonation(totalDonations)
+    }
+}
+
+fun printTotalDonation(totalDonations: List<Donation>) {
+    val output = document.getElementById("output") as HTMLDivElement
+    output.append.div {
+        span("donator") { +"Total donations" }
+        table {
+            classes = setOf("totalDonations")
+            tr {
+                th {
+                    colSpan = "2"
+                    +"Item"
+                }
+                th { +"Price" }
+            }
+            totalDonations.forEach {
+                renderTotalDonation(it)
+            }
+        }
+    }
+}
+
+fun TABLE.renderTotalDonation(donation: Donation) {
+    tr {
+        td {
+            img {
+                alt = donation.item.name
+                src = donation.item.icon
+                width = "32px"
+                height = "32px"
+                style = "vertical-align: middle;"
+            }
+        }
+        td {
+            style = "text-align: left;"
+            if (donation.quantity >= 2) {
+                +"${donation.quantity} "
+            }
+            +donation.item.name
+        }
+        td {
+            style = "text-align: right;"
+            img {
+                alt = "Gold"
+                src = "https://i.imgur.com/BYDgrSM.png"
+                width = "16px"
+                height = "16px"
+                classes = setOf("totalValueGoldIcon")
+            }
+            +(donation.totalPrice / 10000).toString()
+        }
     }
 }
 
