@@ -139,7 +139,7 @@ fun printDonations(donators: List<Donator>) {
 private fun DIV.renderDonator(donator: Donator) = div("donator") {
     span("donator") { +donator.name }
     val itemRows = donator.donations.chunked(4)
-    itemRows.forEach { renderItems(it) }
+    itemRows.forEach { renderItems(it, itemRows.size == 1) }
 
     val totalValue = donator.donations.fold(0) { accumulator, donation -> accumulator + donation.totalPrice }
     div("itemContainer totalValue") {
@@ -155,11 +155,12 @@ private fun DIV.renderDonator(donator: Donator) = div("donator") {
     }
 }
 
-private fun DIV.renderItems(items: List<Donation>) = div("items") {
-    items.forEach { renderItem(it) }
+private fun DIV.renderItems(items: List<Donation>, center: Boolean) = div("items") {
+    items.forEach { renderItem(it, center) }
 }
 
-private fun DIV.renderItem(donation: Donation) = div(classes = "itemContainer") {
+private fun DIV.renderItem(donation: Donation, center: Boolean) =
+    div(classes = "itemContainer" + if (center) " centerContent" else "") {
     img {
         alt = donation.item.name
         src = donation.item.icon

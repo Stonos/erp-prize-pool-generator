@@ -16,9 +16,13 @@
 .itemContainer {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
     margin-left: 16px;
     margin-right: 16px;
+    min-width: 250px;
+}
+
+.centerContent {
+    justify-content: center;
 }
 
 .multiplicationSign {
