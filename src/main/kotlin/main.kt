@@ -13,6 +13,8 @@ import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLTextAreaElement
 import kotlin.browser.document
 
+const val ITEMS_PER_ROW = 4
+
 fun main() {
     val txtInput = document.getElementById("txtInput") as HTMLTextAreaElement
     val btnGo = document.getElementById("btnGo") as HTMLButtonElement
@@ -138,8 +140,20 @@ fun printDonations(donators: List<Donator>) {
 
 private fun DIV.renderDonator(donator: Donator) = div("donator") {
     span("donator") { +donator.name }
-    val itemRows = donator.donations.chunked(4)
-    itemRows.forEach { renderItems(it, itemRows.size == 1) }
+    val itemRows = donator.donations.chunked(ITEMS_PER_ROW)
+
+    table("donationsTable") {
+        itemRows.forEach { row ->
+            if (row.size % 2 == ITEMS_PER_ROW % 2) {
+                renderItems(row)
+            }
+        }
+    }
+
+    val lastRow = itemRows.last()
+    if (lastRow.size % 2 != ITEMS_PER_ROW % 2) {
+        table("donationsTable") { renderItems(lastRow) }
+    }
 
     val totalValue = donator.donations.fold(0) { accumulator, donation -> accumulator + donation.totalPrice }
     div("itemContainer totalValue") {
@@ -155,20 +169,29 @@ private fun DIV.renderDonator(donator: Donator) = div("donator") {
     }
 }
 
-private fun DIV.renderItems(items: List<Donation>, center: Boolean) = div("items") {
-    items.forEach { renderItem(it, center) }
+private fun TABLE.renderItems(items: List<Donation>) = tr {
+    val fakeTdCount = (ITEMS_PER_ROW - items.size) / 2
+    for (i in 0 until fakeTdCount) {
+        td {}
+    }
+    items.forEach { renderItem(it) }
+    for (i in 0 until fakeTdCount) {
+        td {}
+    }
 }
 
-private fun DIV.renderItem(donation: Donation, center: Boolean) =
-    div(classes = "itemContainer" + if (center) " centerContent" else "") {
-    img {
-        alt = donation.item.name
-        src = donation.item.icon
-        width = "64px"
-        height = "64px"
+private fun TR.renderItem(donation: Donation) = td {
+    div("itemContainer") {
+        //    div(classes = "itemContainer" + if (center) " centerContent" else "") {
+        img {
+            alt = donation.item.name
+            src = donation.item.icon
+            width = "64px"
+            height = "64px"
+        }
+        span("multiplicationSign") {
+            +"×"
+        }
+        +donation.quantity.toString()
     }
-    span("multiplicationSign") {
-        +"×"
-    }
-    +donation.quantity.toString()
 }
