@@ -33,10 +33,12 @@ private fun parseInput(input: String) {
 
     val itemsIds = parsedLines.map { it.itemId }.toSet()
     GlobalScope.launch {
-        val items = Requests.fetchItemDetails(itemsIds)
+        val chunkedIds = itemsIds.chunked(200)
+
+        val items = chunkedIds.map { Requests.fetchItemDetails(it) }.flatten()
         println(items)
 
-        val prices = Requests.fetchItemPrices(itemsIds)
+        val prices = chunkedIds.map { Requests.fetchItemPrices(it) }.flatten()
         println(prices)
 
         val itemsWithPrice = items.mapNotNull { item ->
