@@ -50,6 +50,18 @@ private fun parseInput(input: String) {
             "https://render.guildwars2.com/file/207BDD31BC494A07A0A1691705079100066D3F2F/414998.png",
             28 * 10000
         )
+        itemsWithPrice[-3] = ItemDetails(
+            -3,
+            "Orb of Crystallized Plasma",
+            "https://render.guildwars2.com/file/034B091471E6067C2B0BCC70FE04D2F3AE51F291/1010539.png",
+            100 * 10000
+        )
+        itemsWithPrice[-4] = ItemDetails(
+            -4,
+            "Chunk of Crystallized Plasma",
+            "https://render.guildwars2.com/file/B55C52B1117B0AE9C124FF40DD5E4D0A5295095F/1010533.png",
+            1 * 10000
+        )
         println(itemsWithPrice)
 
         val donatorNames = parsedLines.map { it.name }.toSet()
