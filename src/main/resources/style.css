@@ -21,6 +21,10 @@
     /*min-width: 250px;*/
 }
 
+.itemIcon {
+    border-radius: 10%;
+}
+
 .donationsTable {
     margin: auto;
     text-align: left;
@@ -56,8 +60,7 @@
 }
 
 .totalValueGoldIcon {
-    margin-left: 24px;
-    margin-right: 8px;
+    margin-left: 4px;
 }
 
 @font-face {

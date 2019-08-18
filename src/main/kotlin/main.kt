@@ -14,6 +14,7 @@ import org.w3c.dom.HTMLTextAreaElement
 import kotlin.browser.document
 
 const val ITEMS_PER_ROW = 4
+const val GOLD_ICON = "https://i.imgur.com/mV00LQE.png"
 
 fun main() {
     val txtInput = document.getElementById("txtInput") as HTMLTextAreaElement
@@ -45,7 +46,7 @@ private fun parseInput(input: String) {
             val price = prices.find { it.id == item.id } ?: return@mapNotNull null
             item.copy(price = price.sellsOrBuys.unitPrice)
         }.associateBy { it.id }.toMutableMap()
-        itemsWithPrice[-1] = ItemDetails(-1, "gold", "https://i.imgur.com/BYDgrSM.png", 10000)
+        itemsWithPrice[-1] = ItemDetails(-1, "gold", GOLD_ICON, 10000)
         itemsWithPrice[-2] = ItemDetails(
             -2,
             "Black Lion Chest Key",
@@ -86,26 +87,37 @@ private fun parseInput(input: String) {
         val totalDonations = totalItemQuantities.map { itemQuantity ->
             Donation(itemsWithPrice.getValue(itemQuantity.key), itemQuantity.value)
         }.sortedDescending()
+
         println(totalDonations)
         printTotalDonation(totalDonations)
     }
 }
 
 fun printTotalDonation(totalDonations: List<Donation>) {
+    val totalValue = totalDonations.fold(0) { accumulator, element -> accumulator + element.totalPrice }
+
     val output = document.getElementById("output") as HTMLDivElement
     output.append.div {
         span("donator") { +"Total donations" }
         table {
             classes = setOf("totalDonations")
-            tr {
-                th {
-                    colSpan = "2"
-                    +"Item"
-                }
-                th { +"Price" }
-            }
+//            tr {
+//                th {
+//                    colSpan = "2"
+//                    +"Item"
+//                }
+//                th { +"Price" }
+//            }
             totalDonations.forEach {
                 renderTotalDonation(it)
+            }
+            tr {
+                td { }
+                td {
+                    style = "text-align: left;"
+                    +"Total"
+                }
+                printPriceCell(totalValue)
             }
         }
     }
@@ -119,6 +131,7 @@ fun TABLE.renderTotalDonation(donation: Donation) {
                 src = donation.item.icon
                 width = "32px"
                 height = "32px"
+                classes = setOf("itemIcon")
                 style = "vertical-align: middle;"
             }
         }
@@ -129,16 +142,20 @@ fun TABLE.renderTotalDonation(donation: Donation) {
             }
             +donation.item.name
         }
-        td {
-            style = "text-align: right;"
-            img {
-                alt = "Gold"
-                src = "https://i.imgur.com/BYDgrSM.png"
-                width = "16px"
-                height = "16px"
-                classes = setOf("totalValueGoldIcon")
-            }
-            +(donation.totalPrice / 10000).toString()
+        printPriceCell(donation.totalPrice)
+    }
+}
+
+private fun TR.printPriceCell(totalPrice: Int) {
+    td {
+        style = "text-align: right; vertical-align: middle;"
+        +(totalPrice / 10000).toString()
+        img {
+            alt = "Gold"
+            src = GOLD_ICON
+            width = "32px"
+            height = "32px"
+            classes = setOf("totalValueGoldIcon")
         }
     }
 }
@@ -172,14 +189,14 @@ private fun DIV.renderDonator(donator: Donator) = div("donator") {
     val totalValue = donator.donations.fold(0) { accumulator, donation -> accumulator + donation.totalPrice }
     div("itemContainer totalValue") {
         +"Total value: "
+        +(totalValue / 10000).toString()
         img {
             alt = "Gold"
-            src = "https://i.imgur.com/BYDgrSM.png"
+            src = GOLD_ICON
             width = "32px"
             height = "32px"
             classes = setOf("totalValueGoldIcon")
         }
-        +(totalValue / 10000).toString()
     }
 }
 
@@ -200,6 +217,7 @@ private fun TR.renderItem(donation: Donation) = td {
         img {
             alt = donation.item.name
             src = donation.item.icon
+            classes = setOf("itemIcon")
             width = "64px"
             height = "64px"
         }
