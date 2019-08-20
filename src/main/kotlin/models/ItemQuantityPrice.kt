@@ -10,5 +10,5 @@ data class ItemQuantityPrice(
     val quantity: Int,
 
     @SerialName("unit_price")
-    val unitPrice: Int
+    val unitPrice: Long
 )

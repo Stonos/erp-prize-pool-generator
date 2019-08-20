@@ -14,5 +14,5 @@ data class ItemDetails(
     @SerialName("icon")
     val icon: String,
 
-    val price: Int = 0
+    val price: Long = 0L
 )

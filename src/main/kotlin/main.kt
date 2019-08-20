@@ -94,7 +94,7 @@ private fun parseInput(input: String) {
 }
 
 fun printTotalDonation(totalDonations: List<Donation>) {
-    val totalValue = totalDonations.fold(0) { accumulator, element -> accumulator + element.totalPrice }
+    val totalValue = totalDonations.fold(0L) { accumulator, element -> accumulator + element.totalPrice }
 
     val output = document.getElementById("output") as HTMLDivElement
     output.append.div {
@@ -146,7 +146,7 @@ fun TABLE.renderTotalDonation(donation: Donation) {
     }
 }
 
-private fun TR.printPriceCell(totalPrice: Int) {
+private fun TR.printPriceCell(totalPrice: Long) {
     td {
         style = "text-align: right; vertical-align: middle;"
         +(totalPrice / 10000).toString()
@@ -186,7 +186,7 @@ private fun DIV.renderDonator(donator: Donator) = div("donator") {
         table("donationsTable") { renderItems(lastRow) }
     }
 
-    val totalValue = donator.donations.fold(0) { accumulator, donation -> accumulator + donation.totalPrice }
+    val totalValue = donator.donations.fold(0L) { accumulator, donation -> accumulator + donation.totalPrice }
     div("itemContainer totalValue") {
         +"Total value: "
         +(totalValue / 10000).toString()
