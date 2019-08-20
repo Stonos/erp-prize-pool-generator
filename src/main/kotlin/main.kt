@@ -15,6 +15,7 @@ import kotlin.browser.document
 
 const val ITEMS_PER_ROW = 4
 const val GOLD_ICON = "https://i.imgur.com/mV00LQE.png"
+const val ONE_GOLD = 10000L
 
 fun main() {
     val txtInput = document.getElementById("txtInput") as HTMLTextAreaElement
@@ -46,24 +47,24 @@ private fun parseInput(input: String) {
             val price = prices.find { it.id == item.id } ?: return@mapNotNull null
             item.copy(price = price.sellsOrBuys.unitPrice)
         }.associateBy { it.id }.toMutableMap()
-        itemsWithPrice[-1] = ItemDetails(-1, "gold", GOLD_ICON, 10000)
+        itemsWithPrice[-1] = ItemDetails(-1, "gold", GOLD_ICON, ONE_GOLD)
         itemsWithPrice[-2] = ItemDetails(
             -2,
             "Black Lion Chest Key",
             "https://render.guildwars2.com/file/207BDD31BC494A07A0A1691705079100066D3F2F/414998.png",
-            28 * 10000
+            28 * ONE_GOLD
         )
         itemsWithPrice[-3] = ItemDetails(
             -3,
             "Orb of Crystallized Plasma",
             "https://render.guildwars2.com/file/034B091471E6067C2B0BCC70FE04D2F3AE51F291/1010539.png",
-            100 * 10000
+            100 * ONE_GOLD
         )
         itemsWithPrice[-4] = ItemDetails(
             -4,
             "Chunk of Crystallized Plasma",
             "https://render.guildwars2.com/file/B55C52B1117B0AE9C124FF40DD5E4D0A5295095F/1010533.png",
-            1 * 10000
+            1 * ONE_GOLD
         )
         println(itemsWithPrice)
 
@@ -149,7 +150,7 @@ fun TABLE.renderTotalDonation(donation: Donation) {
 private fun TR.printPriceCell(totalPrice: Long) {
     td {
         style = "text-align: right; vertical-align: middle;"
-        +(totalPrice / 10000).toString()
+        +(totalPrice / ONE_GOLD).toString()
         img {
             alt = "Gold"
             src = GOLD_ICON
@@ -189,7 +190,7 @@ private fun DIV.renderDonator(donator: Donator) = div("donator") {
     val totalValue = donator.donations.fold(0L) { accumulator, donation -> accumulator + donation.totalPrice }
     div("itemContainer totalValue") {
         +"Total value: "
-        +(totalValue / 10000).toString()
+        +(totalValue / ONE_GOLD).toString()
         img {
             alt = "Gold"
             src = GOLD_ICON
