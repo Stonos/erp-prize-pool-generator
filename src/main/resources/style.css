@@ -47,6 +47,29 @@
     margin-top: 32px;
 }
 
+.smallDonator {
+    font-size: 1em !important;
+    -webkit-text-stroke: 2px black !important;
+}
+
+.smallDonationsTable {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+table.smallDonationsTable td {
+    vertical-align: top;
+}
+
+table.smallDonationsTable td + td {
+    border-left: 2px solid black;
+}
+
+table.donationsTable td + td {
+    border-left: 0 solid black !important;
+}
+
 .totalValue {
     font-size: 0.5em;
     -webkit-text-stroke: 2px black;
