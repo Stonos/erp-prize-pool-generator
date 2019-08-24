@@ -166,30 +166,41 @@ private fun TR.printPriceCell(totalPrice: Long) {
 fun printDonations(donators: List<Donator>) {
     val output = document.getElementById("output") as HTMLDivElement
     val bigDonators = donators.filter { it.isBigDonator }
-    val smallDonators = donators.filter { !it.isBigDonator }.chunked(SMALL_DONATIONS_PER_ROW)
+    val smallDonators = donators.filter { !it.isBigDonator }
     output.append.div {
         bigDonators.forEach {
             renderDonator(it)
         }
 
-        table {
-            classes = setOf("smallDonationsTable")
-            smallDonators.forEach { row ->
-                tr {
-                    row.forEach {
-                        td {
-                            div {
-                                renderDonator(it)
-                            }
-                        }
-                    }
+        div("smallDonators") {
+            smallDonators.forEach {
+                div("smallDonator") {
+                    renderDonator(it)
                 }
             }
         }
     }
+
+    initMagicGrid(smallDonators.size)
 }
 
-private fun DIV.renderDonator(donator: Donator) = div("donator" + if (!donator.isBigDonator) " smallDonator" else "") {
+private fun initMagicGrid(count: Int) {
+    js(
+        """
+            var magicGrid = new MagicGrid({
+  container: ".smallDonators", // Required. Can be a class, id, or an HTMLElement.
+  items: count, // For a grid with 20 items. Required for dynamic content.
+  gutter: 0,
+  animate: false // Optional.
+});
+
+magicGrid.listen();
+        """
+    )
+}
+
+
+private fun DIV.renderDonator(donator: Donator) = div("donator") {
     val itemsPerRow = if (donator.isBigDonator) ITEMS_PER_ROW else ITEMS_PER_ROW_SMALL
     span("donator") { +donator.name }
     val itemRows = donator.donations.chunked(itemsPerRow)
