@@ -4,14 +4,12 @@ import kotlinx.html.*
 import kotlinx.html.dom.append
 import kotlinx.html.js.div
 import kotlinx.serialization.UnstableDefault
-import models.Donation
-import models.Donator
-import models.ItemDetails
-import models.ParsedLine
+import models.*
 import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLTextAreaElement
 import kotlin.browser.document
+import kotlin.math.round
 
 const val ITEMS_PER_ROW = 4
 const val ITEMS_PER_ROW_SMALL = 4
@@ -21,14 +19,17 @@ const val ONE_GOLD = 10000L
 
 fun main() {
     val txtInput = document.getElementById("txtInput") as HTMLTextAreaElement
+    val txtMatcherinoInput = document.getElementById("txtMatcherinoInput") as HTMLTextAreaElement
     val btnGo = document.getElementById("btnGo") as HTMLButtonElement
     btnGo.addEventListener("click", {
-        parseInput(txtInput.value)
+        parseInput(txtInput.value, txtMatcherinoInput.value)
     })
 }
 
 @UnstableDefault
-private fun parseInput(input: String) {
+private fun parseInput(input: String, matcherinoInput: String) {
+    parseMatcherino(matcherinoInput)
+
     val lines = input.split("\n")
     val parsedLines = lines.map { line ->
         val columns = line.split("\t")
@@ -96,12 +97,51 @@ private fun parseInput(input: String) {
     }
 }
 
+fun parseMatcherino(input: String) {
+    val lines = input.split("\n")
+    val parsedLines = lines.map { line ->
+        val columns = line.split("\t")
+        MatcherinoDonation(columns[0], columns[1].toDouble())
+    }
+    val groupedDonations =
+        parsedLines.groupingBy { it.name }.fold(0.toDouble()) { accumulator, element -> accumulator + element.amount }
+    val donations = groupedDonations.map { entry -> MatcherinoDonation(entry.key, entry.value) }.sorted()
+    println(donations)
+    printMatcherino(donations)
+}
+
+fun printMatcherino(donations: List<MatcherinoDonation>) {
+    val output = document.getElementById("output") as HTMLDivElement
+    output.append.div {
+        span("donator title") {
+            img("tpotSellout", "https://static-cdn.jtvnw.net/emoticons/v1/469972/3.0", "titleImage")
+            +"Matcherino donations"
+            img("tpotSellout", "https://static-cdn.jtvnw.net/emoticons/v1/469972/3.0", "titleImage")
+        }
+        table {
+            classes = setOf("totalDonations")
+            donations.forEach { donation ->
+                tr {
+                    td {
+                        style = "text-align: left;"
+                        +donation.name
+                    }
+                    td {
+                        style = "text-align: right; vertical-align: middle;"
+                        +"$${donation.amount.round(2)}"
+                    }
+                }
+            }
+        }
+    }
+}
+
 fun printTotalDonation(totalDonations: List<Donation>) {
     val totalValue = totalDonations.fold(0L) { accumulator, element -> accumulator + element.totalPrice }
 
     val output = document.getElementById("output") as HTMLDivElement
     output.append.div {
-        span("donator") { +"Total donations" }
+        span("donator title") { +"Total donations" }
         table {
             classes = setOf("totalDonations")
 //            tr {
@@ -202,7 +242,7 @@ magicGrid.listen();
 
 private fun DIV.renderDonator(donator: Donator) = div("donator") {
     val itemsPerRow = if (donator.isBigDonator) ITEMS_PER_ROW else ITEMS_PER_ROW_SMALL
-    span("donator") { +donator.name }
+    span("donator title") { +donator.name }
     val itemRows = donator.donations.chunked(itemsPerRow)
 
     table("donationsTable") {
@@ -259,4 +299,10 @@ private fun TR.renderItem(donation: Donation, bigDonator: Boolean) = td {
         }
         +donation.quantity.toString()
     }
+}
+
+fun Double.round(decimals: Int): Double {
+    var multiplier = 1.0
+    repeat(decimals) { multiplier *= 10 }
+    return round(this * multiplier) / multiplier
 }

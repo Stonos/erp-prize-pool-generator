@@ -41,6 +41,16 @@
     margin-right: 8px;
 }
 
+.title {
+    display: inline-flex;
+    align-items: center;
+}
+
+.titleImage {
+    margin-left: 16px;
+    margin-right: 16px;
+}
+
 .donator {
     font-weight: bold;
     font-size: 1.5em;
