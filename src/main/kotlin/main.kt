@@ -20,14 +20,15 @@ const val ONE_GOLD = 10000L
 fun main() {
     val txtInput = document.getElementById("txtInput") as HTMLTextAreaElement
     val txtMatcherinoInput = document.getElementById("txtMatcherinoInput") as HTMLTextAreaElement
+    val txtEmotesInput = document.getElementById("txtEmotesInput") as HTMLTextAreaElement
     val btnGo = document.getElementById("btnGo") as HTMLButtonElement
     btnGo.addEventListener("click", {
-        parseInput(txtInput.value, txtMatcherinoInput.value)
+        parseInput(txtInput.value, txtMatcherinoInput.value, txtEmotesInput.value)
     })
 }
 
 @UnstableDefault
-private fun parseInput(input: String, matcherinoInput: String) {
+private fun parseInput(input: String, matcherinoInput: String, emotesInput: String) {
     parseMatcherino(matcherinoInput)
 
     val lines = input.split("\n")
@@ -35,6 +36,13 @@ private fun parseInput(input: String, matcherinoInput: String) {
         val columns = line.split("\t")
         ParsedLine(columns[0].toLowerCase(), columns[1].toInt(), columns[3].toInt())
     }
+
+    val emoteLines = emotesInput.split("\n")
+    val emotes = emoteLines.associate { line ->
+        val columns = line.split("\t")
+        Pair(columns[0].toLowerCase(), Pair(columns.getOrNull(1), columns.getOrNull(2)))
+    }
+    println(emotes)
 
     val itemsIds = parsedLines.map { it.itemId }.toSet()
     GlobalScope.launch {
@@ -79,7 +87,9 @@ private fun parseInput(input: String, matcherinoInput: String) {
             val donations = itemQuantities.map { itemQuantity ->
                 Donation(itemsWithPrice.getValue(itemQuantity.key), itemQuantity.value)
             }.sortedDescending()
-            Donator(name, donations)
+
+            val emote = emotes[name]
+            Donator(name, donations, emote?.first, emote?.second)
         }.sortedDescending()
 
 //        println(donators)
@@ -242,9 +252,20 @@ magicGrid.listen();
 
 private fun DIV.renderDonator(donator: Donator) = div("donator") {
     val itemsPerRow = if (donator.isBigDonator) ITEMS_PER_ROW else ITEMS_PER_ROW_SMALL
-    span("donator title") { +donator.name }
-    val itemRows = donator.donations.chunked(itemsPerRow)
 
+    span("donator title") {
+        if (!donator.leftImage.isNullOrBlank()) {
+            img("", donator.leftImage, "titleImage")
+        }
+
+        +donator.name
+
+        if (!donator.rightImage.isNullOrBlank()) {
+            img("", donator.rightImage, "titleImage")
+        }
+    }
+
+    val itemRows = donator.donations.chunked(itemsPerRow)
     table("donationsTable") {
         itemRows.forEach { row ->
             if (row.size % 2 == itemsPerRow % 2) {

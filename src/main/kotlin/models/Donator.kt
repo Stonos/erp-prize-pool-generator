@@ -2,7 +2,8 @@ package models
 
 import ONE_GOLD
 
-data class Donator(val name: String, val donations: List<Donation>) : Comparable<Donator> {
+data class Donator(val name: String, val donations: List<Donation>, val leftImage: String?, val rightImage: String?) :
+    Comparable<Donator> {
     val totalDonation: Long
         get() = donations.fold(0L) { acc, donation -> acc + donation.totalPrice }
 
