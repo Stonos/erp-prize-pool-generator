@@ -77,6 +77,12 @@ private fun parseInput(input: String, matcherinoInput: String, emotesInput: Stri
             "https://render.guildwars2.com/file/B55C52B1117B0AE9C124FF40DD5E4D0A5295095F/1010533.png",
             1 * ONE_GOLD
         )
+        itemsWithPrice[-5] = ItemDetails(
+            -5,
+            "Chak Egg Sac",
+            "https://render.guildwars2.com/file/FE73F012119252F1935797B2EC2C94482AB5A308/831485.png",
+            22000 * ONE_GOLD
+        )
         println(itemsWithPrice)
 
         val donatorNames = parsedLines.map { it.name }.toSet()
