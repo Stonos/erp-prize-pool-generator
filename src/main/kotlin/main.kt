@@ -57,43 +57,7 @@ private fun parseInput(input: String, matcherinoInput: String, emotesInput: Stri
             val price = prices.find { it.id == item.id } ?: return@mapNotNull null
             item.copy(price = price.sellsOrBuys.unitPrice)
         }.associateBy { it.id }.toMutableMap()
-        itemsWithPrice[-1] = ItemDetails(-1, "gold", GOLD_ICON, ONE_GOLD)
-        itemsWithPrice[-2] = ItemDetails(
-            -2,
-            "Gems",
-            "https://wiki.guildwars2.com/images/8/88/Gem_%28highres%29.png",
-            1 * ONE_GOLD
-        )
-        itemsWithPrice[-3] = ItemDetails(
-            -3,
-            "Orb of Crystallized Plasma",
-            "https://render.guildwars2.com/file/034B091471E6067C2B0BCC70FE04D2F3AE51F291/1010539.png",
-            100 * ONE_GOLD
-        )
-        itemsWithPrice[-4] = ItemDetails(
-            -4,
-            "Chunk of Crystallized Plasma",
-            "https://render.guildwars2.com/file/B55C52B1117B0AE9C124FF40DD5E4D0A5295095F/1010533.png",
-            1 * ONE_GOLD
-        )
-        itemsWithPrice[-5] = ItemDetails(
-            -5,
-            "Chak Egg Sac",
-            "https://render.guildwars2.com/file/FE73F012119252F1935797B2EC2C94482AB5A308/831485.png",
-            22000 * ONE_GOLD
-        )
-        itemsWithPrice[-6] = ItemDetails(
-            -6,
-            "Black Lion Chest Key",
-            "https://render.guildwars2.com/file/207BDD31BC494A07A0A1691705079100066D3F2F/414998.png",
-            28 * ONE_GOLD
-        )
-        itemsWithPrice[-7] = ItemDetails(
-            -7,
-            "Festive Confetti Infusion",
-            "https://render.guildwars2.com/file/00ED7EC9BB0A01045205ED6144FB24E9189B25C2/1822094.png",
-            20000 * ONE_GOLD
-        )
+        addHardcodedIds(itemsWithPrice)
         println(itemsWithPrice)
 
         val donorNames = parsedLines.map { it.name }.toSet()
@@ -122,6 +86,46 @@ private fun parseInput(input: String, matcherinoInput: String, emotesInput: Stri
         println(totalDonations)
         printTotalDonation(totalDonations)
     }
+}
+
+private fun addHardcodedIds(itemsWithPrice: MutableMap<Int, ItemDetails>) {
+    itemsWithPrice[-1] = ItemDetails(-1, "gold", GOLD_ICON, ONE_GOLD)
+    itemsWithPrice[-2] = ItemDetails(
+        -2,
+        "Gems",
+        "https://wiki.guildwars2.com/images/8/88/Gem_%28highres%29.png",
+        1 * ONE_GOLD
+    )
+    itemsWithPrice[-3] = ItemDetails(
+        -3,
+        "Orb of Crystallized Plasma",
+        "https://render.guildwars2.com/file/034B091471E6067C2B0BCC70FE04D2F3AE51F291/1010539.png",
+        100 * ONE_GOLD
+    )
+    itemsWithPrice[-4] = ItemDetails(
+        -4,
+        "Chunk of Crystallized Plasma",
+        "https://render.guildwars2.com/file/B55C52B1117B0AE9C124FF40DD5E4D0A5295095F/1010533.png",
+        1 * ONE_GOLD
+    )
+    itemsWithPrice[-5] = ItemDetails(
+        -5,
+        "Chak Egg Sac",
+        "https://render.guildwars2.com/file/FE73F012119252F1935797B2EC2C94482AB5A308/831485.png",
+        22000 * ONE_GOLD
+    )
+    itemsWithPrice[-6] = ItemDetails(
+        -6,
+        "Black Lion Chest Key",
+        "https://render.guildwars2.com/file/207BDD31BC494A07A0A1691705079100066D3F2F/414998.png",
+        28 * ONE_GOLD
+    )
+    itemsWithPrice[-7] = ItemDetails(
+        -7,
+        "Festive Confetti Infusion",
+        "https://render.guildwars2.com/file/00ED7EC9BB0A01045205ED6144FB24E9189B25C2/1822094.png",
+        20000 * ONE_GOLD
+    )
 }
 
 fun parseMatcherino(input: String) {
