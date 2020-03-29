@@ -98,8 +98,8 @@ private fun parseInput(input: String, matcherinoInput: String, emotesInput: Stri
         )
         println(itemsWithPrice)
 
-        val donatorNames = parsedLines.map { it.name }.toSet()
-        val donators = donatorNames.map { name ->
+        val donorNames = parsedLines.map { it.name }.toSet()
+        val donors = donorNames.map { name ->
             val filteredName = parsedLines.filter { it.name == name }
             val itemQuantities =
                 filteredName.groupingBy { it.itemId }.fold(0) { accumulator, element -> accumulator + element.quantity }
@@ -108,12 +108,12 @@ private fun parseInput(input: String, matcherinoInput: String, emotesInput: Stri
             }.sortedDescending()
 
             val emote = emotes[name]
-            Donator(name, donations, emote?.first, emote?.second)
+            Donor(name, donations, emote?.first, emote?.second)
         }.sortedDescending()
 
-//        println(donators)
-        donators.forEach { println("${it.name}: ${it.totalDonation}") }
-        printDonations(donators)
+//        println(donors)
+        donors.forEach { println("${it.name}: ${it.totalDonation}") }
+        printDonations(donors)
 
         val totalItemQuantities =
             parsedLines.groupingBy { it.itemId }.fold(0) { accumulator, element -> accumulator + element.quantity }
@@ -142,7 +142,7 @@ fun parseMatcherino(input: String) {
 fun printMatcherino(donations: List<MatcherinoDonation>) {
     val output = document.getElementById("output") as HTMLDivElement
     output.append.div {
-        span("donator title") {
+        span("donor title") {
             img("tpotSellout", "https://static-cdn.jtvnw.net/emoticons/v1/469972/3.0", "titleImage")
             +"Matcherino donations"
             img("tpotSellout", "https://static-cdn.jtvnw.net/emoticons/v1/469972/3.0", "titleImage")
@@ -170,7 +170,7 @@ fun printTotalDonation(totalDonations: List<Donation>) {
 
     val output = document.getElementById("output") as HTMLDivElement
     output.append.div {
-        span("donator title") { +"Total donations" }
+        span("donor title") { +"Total donations" }
         table {
             classes = setOf("totalDonations")
 //            tr {
@@ -232,66 +232,66 @@ private fun TR.printPriceCell(totalPrice: Long) {
     }
 }
 
-fun printDonations(donators: List<Donator>) {
+fun printDonations(donors: List<Donor>) {
     val output = document.getElementById("output") as HTMLDivElement
-    val bigDonators = donators.filter { it.isBigDonator }
-    val smallDonators = donators.filter { !it.isBigDonator }
+    val bigDonors = donors.filter { it.isBigDonor }
+    val smallDonors = donors.filter { !it.isBigDonor }
     output.append.div {
-        bigDonators.forEach {
-            renderDonator(it)
+        bigDonors.forEach {
+            renderDonor(it)
         }
 
-        div("smallDonators") {
-            smallDonators.forEach {
-                div("smallDonator") {
-                    renderDonator(it)
+        div("smallDonors") {
+            smallDonors.forEach {
+                div("smallDonor") {
+                    renderDonor(it)
                 }
             }
         }
     }
 
-    initMagicGrid(smallDonators.size)
+    initMagicGrid(smallDonors.size)
 }
 
 private fun initMagicGrid(count: Int) {
     MagicGrid(object : MagicGridProps {
-        override var container = ".smallDonators"
+        override var container = ".smallDonors"
         override var items: Number? = count
         override var gutter: Number? = 0
         override var animate: Boolean? = false
     }).listen()
 }
 
-private fun DIV.renderDonator(donator: Donator) = div("donator") {
-    val itemsPerRow = if (donator.isBigDonator) ITEMS_PER_ROW else ITEMS_PER_ROW_SMALL
+private fun DIV.renderDonor(donor: Donor) = div("donor") {
+    val itemsPerRow = if (donor.isBigDonor) ITEMS_PER_ROW else ITEMS_PER_ROW_SMALL
 
-    span("donator title") {
-        if (!donator.leftImage.isNullOrBlank()) {
-            img("", donator.leftImage, "titleImage")
+    span("donor title") {
+        if (!donor.leftImage.isNullOrBlank()) {
+            img("", donor.leftImage, "titleImage")
         }
 
-        +donator.name
+        +donor.name
 
-        if (!donator.rightImage.isNullOrBlank()) {
-            img("", donator.rightImage, "titleImage")
+        if (!donor.rightImage.isNullOrBlank()) {
+            img("", donor.rightImage, "titleImage")
         }
     }
 
-    val itemRows = donator.donations.chunked(itemsPerRow)
+    val itemRows = donor.donations.chunked(itemsPerRow)
     table("donationsTable") {
         itemRows.forEach { row ->
             if (row.size % 2 == itemsPerRow % 2) {
-                renderItems(row, donator.isBigDonator, itemsPerRow)
+                renderItems(row, donor.isBigDonor, itemsPerRow)
             }
         }
     }
 
     val lastRow = itemRows.last()
     if (lastRow.size % 2 != itemsPerRow % 2) {
-        table("donationsTable") { renderItems(lastRow, donator.isBigDonator, itemsPerRow) }
+        table("donationsTable") { renderItems(lastRow, donor.isBigDonor, itemsPerRow) }
     }
 
-    val totalValue = donator.donations.fold(0L) { accumulator, donation -> accumulator + donation.totalPrice }
+    val totalValue = donor.donations.fold(0L) { accumulator, donation -> accumulator + donation.totalPrice }
     div("itemContainer totalValue") {
         +"Total value: "
         +(totalValue / ONE_GOLD).toString()
@@ -305,19 +305,19 @@ private fun DIV.renderDonator(donator: Donator) = div("donator") {
     }
 }
 
-private fun TABLE.renderItems(items: List<Donation>, isBigDonator: Boolean, itemsPerRow: Int) = tr {
+private fun TABLE.renderItems(items: List<Donation>, isBigDonor: Boolean, itemsPerRow: Int) = tr {
     val fakeTdCount = (itemsPerRow - items.size) / 2
     for (i in 0 until fakeTdCount) {
         td {}
     }
-    items.forEach { renderItem(it, isBigDonator) }
+    items.forEach { renderItem(it, isBigDonor) }
     for (i in 0 until fakeTdCount) {
         td {}
     }
 }
 
-private fun TR.renderItem(donation: Donation, bigDonator: Boolean) = td {
-    val imageSize = if (bigDonator) "64px" else "32px"
+private fun TR.renderItem(donation: Donation, bigDonor: Boolean) = td {
+    val imageSize = if (bigDonor) "64px" else "32px"
     div("itemContainer") {
         //    div(classes = "itemContainer" + if (center) " centerContent" else "") {
         img {

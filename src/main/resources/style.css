@@ -52,13 +52,13 @@
     max-height: 96px;
 }
 
-.donator {
+.donor {
     font-weight: bold;
     font-size: 1.5em;
     margin-top: 32px;
 }
 
-.smallDonator {
+.smallDonor {
     width: 48%;
     display: flex;
     justify-content: center;
@@ -67,11 +67,11 @@
     -webkit-text-stroke: 2px black !important;
 }
 
-.smallDonator:nth-child(odd) {
+.smallDonor:nth-child(odd) {
     border-right: 4px solid black !important;
 }
 
-.smallDonators {
+.smallDonors {
     width: 100%;
 }
 
