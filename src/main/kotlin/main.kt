@@ -62,9 +62,9 @@ private fun parseInput(input: String, matcherinoInput: String, emotesInput: Stri
         itemsWithPrice[-1] = ItemDetails(-1, "gold", GOLD_ICON, ONE_GOLD)
         itemsWithPrice[-2] = ItemDetails(
             -2,
-            "Black Lion Chest Key",
-            "https://render.guildwars2.com/file/207BDD31BC494A07A0A1691705079100066D3F2F/414998.png",
-            28 * ONE_GOLD
+            "Gems",
+            "https://wiki.guildwars2.com/images/8/88/Gem_%28highres%29.png",
+            1 * ONE_GOLD
         )
         itemsWithPrice[-3] = ItemDetails(
             -3,
@@ -83,6 +83,18 @@ private fun parseInput(input: String, matcherinoInput: String, emotesInput: Stri
             "Chak Egg Sac",
             "https://render.guildwars2.com/file/FE73F012119252F1935797B2EC2C94482AB5A308/831485.png",
             22000 * ONE_GOLD
+        )
+        itemsWithPrice[-6] = ItemDetails(
+            -6,
+            "Black Lion Chest Key",
+            "https://render.guildwars2.com/file/207BDD31BC494A07A0A1691705079100066D3F2F/414998.png",
+            28 * ONE_GOLD
+        )
+        itemsWithPrice[-7] = ItemDetails(
+            -7,
+            "Festive Confetti Infusion",
+            "https://render.guildwars2.com/file/00ED7EC9BB0A01045205ED6144FB24E9189B25C2/1822094.png",
+            20000 * ONE_GOLD
         )
         println(itemsWithPrice)
 
