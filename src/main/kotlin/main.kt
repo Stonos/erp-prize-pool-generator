@@ -10,6 +10,7 @@ import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLTextAreaElement
 import kotlin.browser.document
 import kotlin.math.round
+import kotlin.math.roundToInt
 
 const val ITEMS_PER_ROW = 4
 const val ITEMS_PER_ROW_SMALL = 4
@@ -34,7 +35,7 @@ private fun parseInput(input: String, matcherinoInput: String, emotesInput: Stri
     val lines = input.split("\n")
     val parsedLines = lines.map { line ->
         val columns = line.split("\t")
-        ParsedLine(columns[0].toLowerCase(), columns[1].toInt(), columns[3].toInt())
+        ParsedLine(columns[0].toLowerCase(), columns[1].toFloat().roundToInt(), columns[3].toInt())
     }
 
     val emoteLines = emotesInput.split("\n")
