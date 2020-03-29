@@ -13,7 +13,6 @@ import kotlin.math.roundToInt
 
 const val ITEMS_PER_ROW = 4
 const val ITEMS_PER_ROW_SMALL = 4
-const val SMALL_DONATIONS_PER_ROW = 2
 const val GOLD_ICON = "https://i.imgur.com/mV00LQE.png"
 const val ONE_GOLD = 10000L
 
@@ -33,7 +32,11 @@ private fun parseInput(input: String, matcherinoInput: String, emotesInput: Stri
     val lines = input.split("\n")
     val parsedLines = lines.map { line ->
         val columns = line.split("\t")
-        ParsedLine(columns[0].toLowerCase(), columns[1].toFloat().roundToInt(), columns[3].toInt())
+        ParsedLine(
+            name = columns[0].toLowerCase(),
+            quantity = columns[1].toFloat().roundToInt(),
+            itemId = columns[3].toInt()
+        )
     }
 
     val emoteLines = emotesInput.split("\n")
@@ -73,7 +76,6 @@ private fun parseInput(input: String, matcherinoInput: String, emotesInput: Stri
             Donor(name, donations, emote?.first, emote?.second)
         }.sortedDescending()
 
-//        println(donors)
         donors.forEach { println("${it.name}: ${it.totalDonation}") }
         printDonations(donors)
 
@@ -175,13 +177,6 @@ fun printTotalDonation(totalDonations: List<Donation>) {
         span("donor title") { +"Total donations" }
         table {
             classes = setOf("totalDonations")
-//            tr {
-//                th {
-//                    colSpan = "2"
-//                    +"Item"
-//                }
-//                th { +"Price" }
-//            }
             totalDonations.forEach {
                 renderTotalDonation(it)
             }
