@@ -254,20 +254,13 @@ fun printDonations(donators: List<Donator>) {
 }
 
 private fun initMagicGrid(count: Int) {
-    js(
-        """
-            var magicGrid = new MagicGrid({
-  container: ".smallDonators", // Required. Can be a class, id, or an HTMLElement.
-  items: count, // For a grid with 20 items. Required for dynamic content.
-  gutter: 0,
-  animate: false // Optional.
-});
-
-magicGrid.listen();
-        """
-    )
+    MagicGrid(object : MagicGridProps {
+        override var container = ".smallDonators"
+        override var items: Number? = count
+        override var gutter: Number? = 0
+        override var animate: Boolean? = false
+    }).listen()
 }
-
 
 private fun DIV.renderDonator(donator: Donator) = div("donator") {
     val itemsPerRow = if (donator.isBigDonator) ITEMS_PER_ROW else ITEMS_PER_ROW_SMALL

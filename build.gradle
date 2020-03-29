@@ -1,18 +1,11 @@
+plugins {
+    id 'org.jetbrains.kotlin.js' version "${kotlinVersion}"
+    id 'org.jetbrains.kotlin.plugin.serialization' version "${kotlinVersion}"
+}
+
 group 'org.example'
 version '1.0-SNAPSHOT'
 
-buildscript {
-    ext.kotlin_version = '1.3.71'
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
-    }
-}
-
-apply plugin: 'kotlin2js'
 apply plugin: 'kotlinx-serialization'
 
 repositories {
@@ -22,45 +15,11 @@ repositories {
 }
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
-    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.0-M2'
-    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core-js:1.3.0-M2'
-    compile "org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:0.11.1"
-    compile "org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:0.11.1"
-    compile "org.jetbrains.kotlinx:kotlinx-html-js:0.6.12"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-js"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-js:1.3.5"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime-js:0.11.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-html-js:0.6.12"
+    implementation(npm("magic-grid"))
 }
 
-compileKotlin2Js.kotlinOptions.sourceMap = true
-compileKotlin2Js.kotlinOptions.outputFile = "${projectDir}/web/js/app.js"
-compileKotlin2Js.kotlinOptions.suppressWarnings = false
-compileKotlin2Js.kotlinOptions.verbose = true
-compileKotlin2Js.kotlinOptions.moduleKind = "umd"
-
-build.doLast {
-//Copy kotlin library files to the web directory 
-// Copy kotlin.js and kotlin-meta.js from jar into web directory
-
-    configurations.compile.each { File file ->
-        copy {
-            includeEmptyDirs = false
-
-            from zipTree(file.absolutePath)
-            into "${projectDir}/web/js/lib"
-            include { fileTreeElement ->
-                def path = fileTreeElement.path
-                path.endsWith(".js") && (path.startsWith("META-INF/resources/") || !path.startsWith("META-INF/"))
-            }
-        }
-    }
-//Copy static resources to the web directory
-    copy {
-        includeEmptyDirs = false
-        from "${buildDir}/resources/main"
-        into "${projectDir}/web"
-    }
-}
-//Delete the web director as part of the clean command
-clean.doFirst {
-    delete "${projectDir}/web"
-
-}
+kotlin.target.browser { }
