@@ -3,7 +3,6 @@ import kotlinx.coroutines.launch
 import kotlinx.html.*
 import kotlinx.html.dom.append
 import kotlinx.html.js.div
-import kotlinx.serialization.UnstableDefault
 import models.*
 import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.HTMLDivElement
@@ -28,7 +27,6 @@ fun main() {
     })
 }
 
-@UnstableDefault
 private fun parseInput(input: String, matcherinoInput: String, emotesInput: String) {
     parseMatcherino(matcherinoInput)
 

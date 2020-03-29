@@ -1,8 +1,7 @@
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.UnstableDefault
+import kotlinx.serialization.builtins.list
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
-import kotlinx.serialization.list
 import models.ItemDetails
 import models.ItemPrice
 import org.w3c.xhr.XMLHttpRequest
@@ -11,10 +10,8 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-
-@UnstableDefault
 object Requests {
-    fun statusHandler(xhr: XMLHttpRequest, coroutineContext: Continuation<String>) {
+    private fun statusHandler(xhr: XMLHttpRequest, coroutineContext: Continuation<String>) {
         if (xhr.readyState == XMLHttpRequest.DONE) {
             if (xhr.status / 100 == 2) {
                 coroutineContext.resume(xhr.response as String)
@@ -24,17 +21,17 @@ object Requests {
         }
     }
 
-    suspend fun httpGet(url: String): String = suspendCoroutine { c ->
+    private suspend fun httpGet(url: String): String = suspendCoroutine { c ->
         val xhr = XMLHttpRequest()
         xhr.onreadystatechange = { _ -> statusHandler(xhr, c) }
         xhr.open("GET", url)
         xhr.send()
     }
 
-    suspend inline fun <reified R : Any> getBase(url: String, serializer: KSerializer<R>): R {
+    private suspend inline fun <reified R : Any> getBase(url: String, serializer: KSerializer<R>): R {
         val rawData = httpGet(url)
         console.log(rawData)
-        val parsed = Json(JsonConfiguration.Default.copy(strictMode = false)).parse(serializer, rawData)
+        val parsed = Json(JsonConfiguration.Default.copy(ignoreUnknownKeys = true)).parse(serializer, rawData)
         return parsed
     }
 
