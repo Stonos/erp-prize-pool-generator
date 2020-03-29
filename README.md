@@ -1,3 +1,5 @@
+[![CI](https://github.com/Stonos/erp-prize-pool-generator/workflows/CI/badge.svg)](https://github.com/Stonos/erp-prize-pool-generator/actions?query=workflow%3ACI)
+
 # ERP3 Prize Pool Generator
 This is the tool (made with Kotlin/JS) that was used to generate the prize pool in the credits video for MightyTeapot's Elitist Raiding Party (ERP) 3 tournament.
 
