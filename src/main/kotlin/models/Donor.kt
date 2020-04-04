@@ -1,6 +1,7 @@
 package models
 
 import ONE_GOLD
+import models.donation.Donation
 
 data class Donor(val name: String, val donations: List<Donation>, val leftImage: String?, val rightImage: String?) :
     Comparable<Donor> {

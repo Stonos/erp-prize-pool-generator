@@ -3,18 +3,20 @@ import kotlinx.coroutines.launch
 import kotlinx.html.*
 import kotlinx.html.dom.append
 import kotlinx.html.js.div
-import models.*
+import models.Donor
+import models.ItemDetails
+import models.MatcherinoDonation
+import models.ParsedLine
+import models.donation.Donation
+import models.donation.GoldDonation
 import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLTextAreaElement
 import kotlin.browser.document
 import kotlin.math.round
-import kotlin.math.roundToInt
 
 const val ITEMS_PER_ROW = 4
 const val ITEMS_PER_ROW_SMALL = 4
-const val GOLD_ICON = "https://i.imgur.com/mV00LQE.png"
-const val ONE_GOLD = 10000L
 
 fun main() {
     val txtInput = document.getElementById("txtInput") as HTMLTextAreaElement
@@ -32,10 +34,17 @@ private fun parseInput(input: String, matcherinoInput: String, emotesInput: Stri
     val lines = input.split("\n")
     val parsedLines = lines.map { line ->
         val columns = line.split("\t")
+
+        val itemId = columns[3].toInt()
+        val quantity = if (itemId != GOLD_ID) {
+            columns[1].toInt()
+        } else {
+            (columns[1].toFloat() * ONE_GOLD).toInt()
+        }
         ParsedLine(
             name = columns[0].toLowerCase(),
-            quantity = columns[1].toFloat().roundToInt(),
-            itemId = columns[3].toInt()
+            quantity = quantity,
+            itemId = itemId
         )
     }
 
@@ -69,7 +78,7 @@ private fun parseInput(input: String, matcherinoInput: String, emotesInput: Stri
             val itemQuantities =
                 filteredName.groupingBy { it.itemId }.fold(0) { accumulator, element -> accumulator + element.quantity }
             val donations = itemQuantities.map { itemQuantity ->
-                Donation(itemsWithPrice.getValue(itemQuantity.key), itemQuantity.value)
+                Donation.buildDonation(itemsWithPrice, itemQuantity.key, itemQuantity.value)
             }.sortedDescending()
 
             val emote = emotes[name]
@@ -82,7 +91,7 @@ private fun parseInput(input: String, matcherinoInput: String, emotesInput: Stri
         val totalItemQuantities =
             parsedLines.groupingBy { it.itemId }.fold(0) { accumulator, element -> accumulator + element.quantity }
         val totalDonations = totalItemQuantities.map { itemQuantity ->
-            Donation(itemsWithPrice.getValue(itemQuantity.key), itemQuantity.value)
+            Donation.buildDonation(itemsWithPrice, itemQuantity.key, itemQuantity.value)
         }.sortedDescending()
 
         println(totalDonations)
@@ -91,7 +100,6 @@ private fun parseInput(input: String, matcherinoInput: String, emotesInput: Stri
 }
 
 private fun addHardcodedIds(itemsWithPrice: MutableMap<Int, ItemDetails>) {
-    itemsWithPrice[-1] = ItemDetails(-1, "gold", GOLD_ICON, ONE_GOLD)
     itemsWithPrice[-2] = ItemDetails(
         -2,
         "Gems",
@@ -196,8 +204,8 @@ fun TABLE.renderTotalDonation(donation: Donation) {
     tr {
         td {
             img {
-                alt = donation.item.name
-                src = donation.item.icon
+                alt = donation.name
+                src = donation.icon
                 width = "32px"
                 height = "32px"
                 classes = setOf("itemIcon")
@@ -209,7 +217,7 @@ fun TABLE.renderTotalDonation(donation: Donation) {
             if (donation.quantity >= 2) {
                 +"${donation.quantity} "
             }
-            +donation.item.name
+            +donation.name
         }
         printPriceCell(donation.totalPrice)
     }
@@ -218,14 +226,7 @@ fun TABLE.renderTotalDonation(donation: Donation) {
 private fun TR.printPriceCell(totalPrice: Long) {
     td {
         style = "text-align: right; vertical-align: middle;"
-        +(totalPrice / ONE_GOLD).toString()
-        img {
-            alt = "Gold"
-            src = GOLD_ICON
-            width = "32px"
-            height = "32px"
-            classes = setOf("totalValueGoldIcon")
-        }
+        GoldDonation(totalPrice).printTotalAmount(this)
     }
 }
 
@@ -291,14 +292,7 @@ private fun DIV.renderDonor(donor: Donor) = div("donor") {
     val totalValue = donor.donations.fold(0L) { accumulator, donation -> accumulator + donation.totalPrice }
     div("itemContainer totalValue") {
         +"Total value: "
-        +(totalValue / ONE_GOLD).toString()
-        img {
-            alt = "Gold"
-            src = GOLD_ICON
-            width = "32px"
-            height = "32px"
-            classes = setOf("totalValueGoldIcon")
-        }
+        GoldDonation(totalValue).printTotalAmount(this)
     }
 }
 
@@ -318,8 +312,8 @@ private fun TR.renderItem(donation: Donation, bigDonor: Boolean) = td {
     div("itemContainer") {
         //    div(classes = "itemContainer" + if (center) " centerContent" else "") {
         img {
-            alt = donation.item.name
-            src = donation.item.icon
+            alt = donation.name
+            src = donation.icon
             classes = setOf("itemIcon")
             width = imageSize
             height = imageSize
