@@ -5,6 +5,7 @@ const donations = document.getElementsByClassName('list-donation-item');
 let output = '';
 
 for (let i = 0; i < donations.length; i++) {
+    const avatar = donations[i].getElementsByTagName('img')[0].src
     const name = donations[i].getElementsByClassName('user-link-name')[0].innerText;
 
     const amounts = donations[i].getElementsByClassName('amount');
@@ -14,7 +15,7 @@ for (let i = 0; i < donations.length; i++) {
     const comment = donations[i].getElementsByClassName('flex-3')[0].innerText;
 
     if ((type === "Direct Contribution" || type === "Masters Of The Arena Enthusiast") && contribution >= 1.0 && name !== "MightyTeapot") {
-        output += name + "\t" + contribution + "\t" + type + "\t" + comment + "\n";
+        output += name + "\t" + contribution + "\t" + type + "\t" + avatar + "\t" + comment + "\n";
     }
 }
 
