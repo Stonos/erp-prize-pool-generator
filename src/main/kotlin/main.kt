@@ -69,7 +69,7 @@ private fun parseInput(input: String, matcherinoInput: String, emotesInput: Stri
             val price = prices.find { it.id == item.id } ?: return@mapNotNull null
             item.copy(price = price.sellsOrBuys.unitPrice)
         }.associateBy { it.id }.toMutableMap()
-        addHardcodedIds(itemsWithPrice)
+        addHardcodedIds(itemsWithPrice, Requests.fetchCoinsPerGem())
         println(itemsWithPrice)
 
         val donorNames = parsedLines.map { it.name }.toSet()
@@ -99,12 +99,12 @@ private fun parseInput(input: String, matcherinoInput: String, emotesInput: Stri
     }
 }
 
-private fun addHardcodedIds(itemsWithPrice: MutableMap<Int, ItemDetails>) {
+private fun addHardcodedIds(itemsWithPrice: MutableMap<Int, ItemDetails>, coinsPerGem: Long) {
     itemsWithPrice[-2] = ItemDetails(
         -2,
         "Gems",
         "https://wiki.guildwars2.com/images/8/88/Gem_%28highres%29.png",
-        1 * ONE_GOLD
+        coinsPerGem
     )
     itemsWithPrice[-3] = ItemDetails(
         -3,
@@ -128,7 +128,7 @@ private fun addHardcodedIds(itemsWithPrice: MutableMap<Int, ItemDetails>) {
         -6,
         "Black Lion Chest Key",
         "https://render.guildwars2.com/file/207BDD31BC494A07A0A1691705079100066D3F2F/414998.png",
-        28 * ONE_GOLD
+        125 * coinsPerGem
     )
     itemsWithPrice[-7] = ItemDetails(
         -7,

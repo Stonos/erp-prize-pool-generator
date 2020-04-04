@@ -2,6 +2,7 @@ import kotlinx.serialization.KSerializer
 import kotlinx.serialization.builtins.list
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
+import models.ExchangeResponse
 import models.ItemDetails
 import models.ItemPrice
 import org.w3c.xhr.XMLHttpRequest
@@ -47,5 +48,14 @@ object Requests {
             "http://api.guildwars2.com/v2/commerce/prices?ids=${ids.joinToString(",")}",
             ItemPrice.serializer().list
         )
+    }
+
+    // rough estimate
+    suspend fun fetchCoinsPerGem(): Long {
+        val response = getBase(
+            "https://api.guildwars2.com/v2/commerce/exchange/coins?quantity=36280000",
+            ExchangeResponse.serializer()
+        )
+        return response.coinsPerGem
     }
 }
