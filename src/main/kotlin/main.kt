@@ -3,10 +3,7 @@ import kotlinx.coroutines.launch
 import kotlinx.html.*
 import kotlinx.html.dom.append
 import kotlinx.html.js.div
-import models.Donor
-import models.ItemDetails
-import models.MatcherinoDonation
-import models.ParsedLine
+import models.*
 import models.donation.Donation
 import models.donation.GoldDonation
 import org.w3c.dom.HTMLButtonElement
@@ -184,10 +181,11 @@ fun parseMatcherino(input: String) {
     val lines = input.split("\n")
     val parsedLines = lines.map { line ->
         val columns = line.split("\t")
-        MatcherinoDonation(columns[0], columns[1].toDouble())
+        MatcherinoDonation(MatcherinoDonor(columns[0], columns[3]), columns[1].toDouble())
     }
     val groupedDonations =
-        parsedLines.groupingBy { it.name }.fold(0.toDouble()) { accumulator, element -> accumulator + element.amount }
+        parsedLines.groupingBy { it.matcherinoDonor }
+            .fold(0.toDouble()) { accumulator, element -> accumulator + element.amount }
     val donations = groupedDonations.map { entry -> MatcherinoDonation(entry.key, entry.value) }.sorted()
     println(donations)
     printMatcherino(donations)
@@ -206,8 +204,14 @@ fun printMatcherino(donations: List<MatcherinoDonation>) {
             donations.forEach { donation ->
                 tr {
                     td {
+                        img(alt = "", src = donation.matcherinoDonor.avatar, classes = "itemIcon") {
+                            height = "32px"
+                            style = "vertical-align: middle;"
+                        }
+                    }
+                    td {
                         style = "text-align: left;"
-                        +donation.name
+                        +donation.matcherinoDonor.name
                     }
                     td {
                         style = "text-align: right; vertical-align: middle;"
