@@ -22,13 +22,18 @@ fun main() {
     val txtInput = document.getElementById("txtInput") as HTMLTextAreaElement
     val txtMatcherinoInput = document.getElementById("txtMatcherinoInput") as HTMLTextAreaElement
     val txtEmotesInput = document.getElementById("txtEmotesInput") as HTMLTextAreaElement
+    val txtHelpersInput = document.getElementById("txtHelpersInput") as HTMLTextAreaElement
     val btnGo = document.getElementById("btnGo") as HTMLButtonElement
     btnGo.addEventListener("click", {
-        parseInput(txtInput.value, txtMatcherinoInput.value, txtEmotesInput.value)
+        parseInput(txtInput.value, txtMatcherinoInput.value, txtEmotesInput.value, txtHelpersInput.value)
     })
 }
 
-private fun parseInput(input: String, matcherinoInput: String, emotesInput: String) {
+private fun parseInput(input: String, matcherinoInput: String, emotesInput: String, helpersInput: String) {
+    val emotes = parseEmotes(emotesInput)
+
+    parseHelpers(helpersInput, emotes)
+
     parseMatcherino(matcherinoInput)
 
     val lines = input.split("\n")
@@ -48,11 +53,6 @@ private fun parseInput(input: String, matcherinoInput: String, emotesInput: Stri
         )
     }
 
-    val emoteLines = emotesInput.split("\n")
-    val emotes = emoteLines.associate { line ->
-        val columns = line.split("\t")
-        Pair(columns[0].toLowerCase(), Pair(columns.getOrNull(1), columns.getOrNull(4)))
-    }
     println(emotes)
 
     val itemsIds = parsedLines.map { it.itemId }.toSet()
@@ -97,6 +97,48 @@ private fun parseInput(input: String, matcherinoInput: String, emotesInput: Stri
         println(totalDonations)
         printTotalDonation(totalDonations)
     }
+}
+
+fun parseHelpers(helpersInput: String, emotes: Map<String, Pair<String?, String?>>) {
+    val helpers = helpersInput.split("\n")
+    printHelpers(helpers, emotes)
+}
+
+fun printHelpers(helpers: List<String>, emotes: Map<String, Pair<String?, String?>>) {
+    val output = document.getElementById("output") as HTMLDivElement
+    output.append.div {
+        span("donor title") {
+            +"Helpers"
+        }
+        table {
+            classes = setOf("totalDonations")
+            helpers.forEach { helper ->
+                val emotePair = emotes[helper.toLowerCase()]
+                tr {
+                    td(classes = "donor title") {
+                        if (!emotePair?.first.isNullOrBlank()) {
+                            img("", emotePair?.first, "titleImage smallImage")
+                        }
+
+                        +helper
+
+                        if (!emotePair?.second.isNullOrBlank()) {
+                            img("", emotePair?.second, "titleImage")
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+private fun parseEmotes(emotesInput: String): Map<String, Pair<String?, String?>> {
+    val emoteLines = emotesInput.split("\n")
+    val emotes = emoteLines.associate { line ->
+        val columns = line.split("\t")
+        Pair(columns[0].toLowerCase(), Pair(columns.getOrNull(1), columns.getOrNull(4)))
+    }
+    return emotes
 }
 
 private fun addHardcodedIds(itemsWithPrice: MutableMap<Int, ItemDetails>, coinsPerGem: Long) {
