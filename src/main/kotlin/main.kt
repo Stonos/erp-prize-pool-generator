@@ -51,7 +51,7 @@ private fun parseInput(input: String, matcherinoInput: String, emotesInput: Stri
     val emoteLines = emotesInput.split("\n")
     val emotes = emoteLines.associate { line ->
         val columns = line.split("\t")
-        Pair(columns[0].toLowerCase(), Pair(columns.getOrNull(1), columns.getOrNull(2)))
+        Pair(columns[0].toLowerCase(), Pair(columns.getOrNull(1), columns.getOrNull(4)))
     }
     println(emotes)
 
