@@ -181,7 +181,7 @@ fun parseMatcherino(input: String) {
     val lines = input.split("\n")
     val parsedLines = lines.map { line ->
         val columns = line.split("\t")
-        MatcherinoDonation(MatcherinoDonor(columns[0], columns[3]), columns[1].toDouble())
+        MatcherinoDonation(MatcherinoDonor(columns[0], columns.getOrNull(3)), columns[1].toDouble())
     }
     val groupedDonations =
         parsedLines.groupingBy { it.matcherinoDonor }
@@ -196,7 +196,7 @@ fun printMatcherino(donations: List<MatcherinoDonation>) {
     output.append.div {
         span("donor title") {
             img("tpotSellout", "https://static-cdn.jtvnw.net/emoticons/v1/469972/3.0", "titleImage")
-            +"Matcherino donations"
+            +"Donations"
             img("tpotSellout", "https://static-cdn.jtvnw.net/emoticons/v1/469972/3.0", "titleImage")
         }
         table {
