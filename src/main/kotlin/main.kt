@@ -201,14 +201,14 @@ fun printMatcherino(donations: List<MatcherinoDonation>) {
         }
         table {
             classes = setOf("totalDonations")
-            donations.forEach { donation ->
-                tr {
-                    td {
-                        img(alt = "", src = donation.matcherinoDonor.avatar, classes = "itemIcon") {
-                            height = "32px"
-                            style = "vertical-align: middle;"
-                        }
-                    }
+            donations.forEachIndexed { i, donation ->
+                tr(classes = "matcherino" + if (i in 0..2) " matcherino$i" else if (donation.amount >= 100) " matcherino3" else "") {
+//                    td {
+//                        style = "text-align: right;"
+//                        img(alt = "", src = donation.matcherinoDonor.avatar, classes = "itemIcon") {
+//                            style = "vertical-align: middle; height: ${if (i <= 2) "2" else "1"}em; margin-right: 8px"
+//                        }
+//                    }
                     td {
                         style = "text-align: left;"
                         +donation.matcherinoDonor.name

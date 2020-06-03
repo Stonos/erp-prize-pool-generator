@@ -91,6 +91,41 @@
     margin-left: 4px;
 }
 
+.matcherino0 {
+    font-size: 2.2em;
+    color: goldenrod;
+}
+
+/*tr.matcherino0 > td {*/
+/*    padding-top: 0.6em;*/
+/*    padding-bottom: 0.6em;*/
+/*}*/
+
+.matcherino1 {
+    font-size: 1.8em;
+    color: silver;
+}
+
+/*tr.matcherino1 > td {*/
+/*    padding-top: 0.6em;*/
+/*    padding-bottom: 0.6em;*/
+/*}*/
+
+.matcherino2 {
+    font-size: 1.4em;
+    color: #cd7f32;
+}
+
+/*tr.matcherino2 > td {*/
+/*    padding-top: 0.6em;*/
+/*    padding-bottom: 1.2em;*/
+/*}*/
+
+.matcherino3 {
+    font-size: 1.2em;
+    color: limegreen;
+}
+
 @font-face {
     font-family: 'Lemon/Milk';
     src: url('fonts/LemonMilkitalic.woff') format('woff');
