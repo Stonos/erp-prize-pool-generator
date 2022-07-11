@@ -1576,6 +1576,12 @@ WannabeZizou
 Xeberneth
 ZinCica
 </textarea>
+<textarea id="txtCustomIds">-2	Gems	https://wiki.guildwars2.com/images/8/88/Gem_%28highres%29.png	11609
+-3	Orb of Crystallized Plasma	https://render.guildwars2.com/file/034B091471E6067C2B0BCC70FE04D2F3AE51F291/1010539.png	1000000
+-4	Chunk of Crystallized Plasma	https://render.guildwars2.com/file/B55C52B1117B0AE9C124FF40DD5E4D0A5295095F/1010533.png	10000
+-5	Chak Egg Sac	https://render.guildwars2.com/file/FE73F012119252F1935797B2EC2C94482AB5A308/831485.png	220000000
+-6	Black Lion Chest Key	https://render.guildwars2.com/file/207BDD31BC494A07A0A1691705079100066D3F2F/414998.png	1451125
+-7	Festive Confetti Infusion	https://render.guildwars2.com/file/00ED7EC9BB0A01045205ED6144FB24E9189B25C2/1822094.png	200000000</textarea>
 <br>
 <button id="btnGo">Go</button>
 
@@ -1587,10 +1593,11 @@ ZinCica
     const txtMatcherinoInput = document.getElementById("txtMatcherinoInput")
     const txtEmotesInput = document.getElementById("txtEmotesInput")
     const txtHelpersInput = document.getElementById("txtHelpersInput")
+    const txtCustomIds = document.getElementById("txtCustomIds")
     const btnGo = document.getElementById("btnGo")
     const outputDiv = document.getElementById("output")
     btnGo.addEventListener("click", ev => {
-        erpPrizePoolGenerator.parseDonations(txtInput.value, txtMatcherinoInput.value, txtEmotesInput.value, txtHelpersInput.value, outputDiv)
+        erpPrizePoolGenerator.parseDonations(txtInput.value, txtMatcherinoInput.value, txtEmotesInput.value, txtHelpersInput.value, txtCustomIds.value, outputDiv)
     })
 </script>
 </body>

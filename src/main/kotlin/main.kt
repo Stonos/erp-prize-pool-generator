@@ -21,6 +21,7 @@ fun parseDonations(
     matcherinoInput: String,
     emotesInput: String,
     helpersInput: String,
+    customIdsInput: String,
     outputDiv: HTMLDivElement
 ) {
     val emotes = parseEmotes(emotesInput)
@@ -62,7 +63,7 @@ fun parseDonations(
             val price = prices.find { it.id == item.id } ?: return@mapNotNull null
             item.copy(price = price.sellsOrBuys.unitPrice)
         }.associateBy { it.id }.toMutableMap()
-        addHardcodedIds(itemsWithPrice, Requests.fetchCoinsPerGem())
+        addCustomIds(itemsWithPrice, customIdsInput)
         println(itemsWithPrice)
 
         val donorNames = parsedLines.map { it.name }.toSet()
@@ -133,43 +134,16 @@ private fun parseEmotes(emotesInput: String): Map<String, Pair<String?, String?>
     return emotes
 }
 
-private fun addHardcodedIds(itemsWithPrice: MutableMap<Int, ItemDetails>, coinsPerGem: Long) {
-    itemsWithPrice[-2] = ItemDetails(
-        -2,
-        "Gems",
-        "https://wiki.guildwars2.com/images/8/88/Gem_%28highres%29.png",
-        coinsPerGem
-    )
-    itemsWithPrice[-3] = ItemDetails(
-        -3,
-        "Orb of Crystallized Plasma",
-        "https://render.guildwars2.com/file/034B091471E6067C2B0BCC70FE04D2F3AE51F291/1010539.png",
-        100 * ONE_GOLD
-    )
-    itemsWithPrice[-4] = ItemDetails(
-        -4,
-        "Chunk of Crystallized Plasma",
-        "https://render.guildwars2.com/file/B55C52B1117B0AE9C124FF40DD5E4D0A5295095F/1010533.png",
-        1 * ONE_GOLD
-    )
-    itemsWithPrice[-5] = ItemDetails(
-        -5,
-        "Chak Egg Sac",
-        "https://render.guildwars2.com/file/FE73F012119252F1935797B2EC2C94482AB5A308/831485.png",
-        22000 * ONE_GOLD
-    )
-    itemsWithPrice[-6] = ItemDetails(
-        -6,
-        "Black Lion Chest Key",
-        "https://render.guildwars2.com/file/207BDD31BC494A07A0A1691705079100066D3F2F/414998.png",
-        125 * coinsPerGem
-    )
-    itemsWithPrice[-7] = ItemDetails(
-        -7,
-        "Festive Confetti Infusion",
-        "https://render.guildwars2.com/file/00ED7EC9BB0A01045205ED6144FB24E9189B25C2/1822094.png",
-        20000 * ONE_GOLD
-    )
+private fun addCustomIds(itemsWithPrice: MutableMap<Int, ItemDetails>, customIdsInput: String) {
+    val lines = customIdsInput.split("\n")
+    lines.forEach { line ->
+        val columns = line.split("\t")
+        val id = columns[0].toInt()
+        val name = columns[1]
+        val icon = columns[2]
+        val price = columns[3].toLong()
+        itemsWithPrice[id] = ItemDetails(id, name, icon, price)
+    }
 }
 
 fun parseMatcherino(input: String, outputDiv: HTMLDivElement) {
