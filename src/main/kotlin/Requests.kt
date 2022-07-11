@@ -1,7 +1,6 @@
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.builtins.list
+import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
 import models.ExchangeResponse
 import models.ItemDetails
 import models.ItemPrice
@@ -12,6 +11,8 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 object Requests {
+    private val json = Json { ignoreUnknownKeys = true }
+
     private fun statusHandler(xhr: XMLHttpRequest, coroutineContext: Continuation<String>) {
         if (xhr.readyState == XMLHttpRequest.DONE) {
             if (xhr.status / 100 == 2) {
@@ -32,21 +33,25 @@ object Requests {
     private suspend inline fun <reified R : Any> getBase(url: String, serializer: KSerializer<R>): R {
         val rawData = httpGet(url)
         console.log(rawData)
-        val parsed = Json(JsonConfiguration.Default.copy(ignoreUnknownKeys = true)).parse(serializer, rawData)
+
+        val parsed = json.decodeFromString(
+            serializer,
+            rawData
+        )
         return parsed
     }
 
     suspend fun fetchItemDetails(ids: Iterable<Int>): List<ItemDetails> {
         return getBase(
             "https://api.guildwars2.com/v2/items?ids=${ids.joinToString(",")}",
-            ItemDetails.serializer().list
+            ListSerializer(ItemDetails.serializer())
         )
     }
 
     suspend fun fetchItemPrices(ids: Iterable<Int>): List<ItemPrice> {
         return getBase(
-            "http://api.guildwars2.com/v2/commerce/prices?ids=${ids.joinToString(",")}",
-            ItemPrice.serializer().list
+            "https://api.guildwars2.com/v2/commerce/prices?ids=${ids.joinToString(",")}",
+            ListSerializer(ItemPrice.serializer())
         )
     }
 

@@ -1,3 +1,4 @@
+import kotlinx.browser.document
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.html.*
@@ -9,7 +10,6 @@ import models.donation.GoldDonation
 import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLTextAreaElement
-import kotlin.browser.document
 import kotlin.math.round
 
 const val ITEMS_PER_ROW = 4
