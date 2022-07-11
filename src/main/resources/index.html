@@ -1581,6 +1581,17 @@ ZinCica
 
 <div id="output"></div>
 
-<script type="text/javascript" src="erp-prize-pool-generator.js"></script>
+<script type="text/javascript" src="erpPrizePoolGenerator.js"></script>
+<script type="text/javascript">
+    const txtInput = document.getElementById("txtInput")
+    const txtMatcherinoInput = document.getElementById("txtMatcherinoInput")
+    const txtEmotesInput = document.getElementById("txtEmotesInput")
+    const txtHelpersInput = document.getElementById("txtHelpersInput")
+    const btnGo = document.getElementById("btnGo")
+    const outputDiv = document.getElementById("output")
+    btnGo.addEventListener("click", ev => {
+        erpPrizePoolGenerator.parseDonations(txtInput.value, txtMatcherinoInput.value, txtEmotesInput.value, txtHelpersInput.value, outputDiv)
+    })
+</script>
 </body>
 </html>

@@ -1,4 +1,3 @@
-import kotlinx.browser.document
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.html.*
@@ -7,31 +6,28 @@ import kotlinx.html.js.div
 import models.*
 import models.donation.Donation
 import models.donation.GoldDonation
-import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.HTMLDivElement
-import org.w3c.dom.HTMLTextAreaElement
 import kotlin.math.round
 
 const val ITEMS_PER_ROW = 4
 const val ITEMS_PER_ROW_SMALL = 4
 
-fun main() {
-    val txtInput = document.getElementById("txtInput") as HTMLTextAreaElement
-    val txtMatcherinoInput = document.getElementById("txtMatcherinoInput") as HTMLTextAreaElement
-    val txtEmotesInput = document.getElementById("txtEmotesInput") as HTMLTextAreaElement
-    val txtHelpersInput = document.getElementById("txtHelpersInput") as HTMLTextAreaElement
-    val btnGo = document.getElementById("btnGo") as HTMLButtonElement
-    btnGo.addEventListener("click", {
-        parseInput(txtInput.value, txtMatcherinoInput.value, txtEmotesInput.value, txtHelpersInput.value)
-    })
-}
+fun main() {}
 
-private fun parseInput(input: String, matcherinoInput: String, emotesInput: String, helpersInput: String) {
+@JsExport
+@JsName("parseDonations")
+fun parseDonations(
+    input: String,
+    matcherinoInput: String,
+    emotesInput: String,
+    helpersInput: String,
+    outputDiv: HTMLDivElement
+) {
     val emotes = parseEmotes(emotesInput)
 
-    parseHelpers(helpersInput, emotes)
+    parseHelpers(helpersInput, emotes, outputDiv)
 
-    parseMatcherino(matcherinoInput)
+    parseMatcherino(matcherinoInput, outputDiv)
 
     val lines = input.split("\n")
     val parsedLines = lines.map { line ->
@@ -83,7 +79,7 @@ private fun parseInput(input: String, matcherinoInput: String, emotesInput: Stri
         }.sortedDescending()
 
         donors.forEach { println("${it.name}: ${it.totalDonation}") }
-        printDonations(donors)
+        printDonations(donors, outputDiv)
 
         val totalItemQuantities =
             parsedLines.groupingBy { it.itemId }.fold(0) { accumulator, element -> accumulator + element.quantity }
@@ -92,18 +88,17 @@ private fun parseInput(input: String, matcherinoInput: String, emotesInput: Stri
         }.sortedDescending()
 
         println(totalDonations)
-        printTotalDonation(totalDonations)
+        printTotalDonation(totalDonations, outputDiv)
     }
 }
 
-fun parseHelpers(helpersInput: String, emotes: Map<String, Pair<String?, String?>>) {
+fun parseHelpers(helpersInput: String, emotes: Map<String, Pair<String?, String?>>, outputDiv: HTMLDivElement) {
     val helpers = helpersInput.split("\n")
-    printHelpers(helpers, emotes)
+    printHelpers(helpers, emotes, outputDiv)
 }
 
-fun printHelpers(helpers: List<String>, emotes: Map<String, Pair<String?, String?>>) {
-    val output = document.getElementById("output") as HTMLDivElement
-    output.append.div {
+fun printHelpers(helpers: List<String>, emotes: Map<String, Pair<String?, String?>>, outputDiv: HTMLDivElement) {
+    outputDiv.append.div {
         span("donor title") {
             +"Helpers"
         }
@@ -177,7 +172,7 @@ private fun addHardcodedIds(itemsWithPrice: MutableMap<Int, ItemDetails>, coinsP
     )
 }
 
-fun parseMatcherino(input: String) {
+fun parseMatcherino(input: String, outputDiv: HTMLDivElement) {
     val lines = input.split("\n")
     val parsedLines = lines.map { line ->
         val columns = line.split("\t")
@@ -188,12 +183,11 @@ fun parseMatcherino(input: String) {
             .fold(0.toDouble()) { accumulator, element -> accumulator + element.amount }
     val donations = groupedDonations.map { entry -> MatcherinoDonation(entry.key, entry.value) }.sorted()
     println(donations)
-    printMatcherino(donations)
+    printMatcherino(donations, outputDiv)
 }
 
-fun printMatcherino(donations: List<MatcherinoDonation>) {
-    val output = document.getElementById("output") as HTMLDivElement
-    output.append.div {
+fun printMatcherino(donations: List<MatcherinoDonation>, outputDiv: HTMLDivElement) {
+    outputDiv.append.div {
         span("donor title") {
             img("tpotSellout", "https://static-cdn.jtvnw.net/emoticons/v1/469972/3.0", "titleImage")
             +"Donations"
@@ -223,11 +217,10 @@ fun printMatcherino(donations: List<MatcherinoDonation>) {
     }
 }
 
-fun printTotalDonation(totalDonations: List<Donation>) {
+fun printTotalDonation(totalDonations: List<Donation>, outputDiv: HTMLDivElement) {
     val totalValue = totalDonations.fold(0L) { accumulator, element -> accumulator + element.totalPrice }
 
-    val output = document.getElementById("output") as HTMLDivElement
-    output.append.div {
+    outputDiv.append.div {
         span("donor title") { +"Total donations" }
         table {
             classes = setOf("totalDonations")
@@ -276,11 +269,10 @@ private fun TR.printPriceCell(totalPrice: Long) {
     }
 }
 
-fun printDonations(donors: List<Donor>) {
-    val output = document.getElementById("output") as HTMLDivElement
+fun printDonations(donors: List<Donor>, outputDiv: HTMLDivElement) {
     val bigDonors = donors.filter { it.isBigDonor }
     val smallDonors = donors.filter { !it.isBigDonor }
-    output.append.div {
+    outputDiv.append.div {
         bigDonors.forEach {
             renderDonor(it)
         }
